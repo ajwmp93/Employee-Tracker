@@ -82,6 +82,63 @@ const mainMenu = async () => {
             console.log('Role added successfully:', addRoleResult.rows[0]);
             break;
 
-        case
+        case 'Add Employee':
+            const rolesList = (await viewAllRoles()).rows.map(role => ({
+                name: role.title,
+                value: role.id
+            }));
+            const managersList = (await viewAllEmployees()).rows.map(emp => ({
+                name: `${emp.first_name} ${emp.last_name}`,
+                value:emp.id
+            }));
+            managersList.push({ name: 'None', value: null});
+            const { firstName, lastName, roleId, managerId } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'firstName',
+                    message: 'Enter the employees first name',
+                },
+                {
+                    type: 'input',
+                    name: 'lastName',
+                    message: 'Enter the employees last name:',
+                },
+                {
+                    type: 'list',
+                    name: 'roleId',
+                    message: 'Select the role for this employee:',
+                    choices: rolesList,
+                },
+                {
+                    type: 'list',
+                    name: 'managerId',
+                    message: 'Select the manager for this employee:',
+                    choices: managersList,
+                },
+            ]);
+            const addEmployeeResult = await addEmployee(firstName, lastName, roleId, managerId);
+            console.log('Employee added successfully:', addEmployeeResult.rows[0]);
+            break;
+
+        case 'Update Employee Role':
+            const employeesList = (await viewAllEmployees()).rows.map(emp => ({
+                name: `${emp.first_name} ${emp.last_name}`,
+                value: emp.id
+            }));
+            const newRolesList = (await viewAllRoles()).rows.mapr(role => ({
+                name: role.title,
+                value: role.id
+            }));
+            const { employeeId, newRoleId } = await inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'employeeId',
+                    message: 'Select the employee whose role you want to update:',
+                    choices: employeesList,
+                },
+                {
+                    
+                }
+            ])
     }
 }
