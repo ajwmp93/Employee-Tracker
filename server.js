@@ -1,5 +1,4 @@
 const express = require('express');
-const inquirer = require('inquirer');
 const {
     viewAllDepartments,
     viewAllRoles,
@@ -28,6 +27,19 @@ app.post('/departments', async (req, res) => {
     }
 });
 
+app.post('/roles', async (req, res) => {
+    try {
+        const { title, salary, departmentId } = req.body;
+        const result = await addRole(title, salary, departmentId);
+        res.json({
+            message: 'Role added successfully',
+            data: result.rows[0]
+        });
+    } catch (error) {
+        console.error('Error adding role:', error);
+    }
+})
+
 app.post('/employees', async (req, res) => {
     try {
         const { firstName, lastName, roleId, managerId } = req.body;
@@ -54,3 +66,42 @@ app.put('/employees/:id/role', async (req, res) => {
     }
 });
 
+app.get('/departments', async (req, res) => {
+    try {
+        const result = await viewAllDepartments();
+        res.json({
+            message: 'Success',
+            data: result.rows
+        });
+    } catch (error) {
+        console.error('Error fetching departments:', error);
+    }
+});
+
+app.get('/roles', async (req, res) => {
+    try {
+        const result = await viewAllRoles();
+        res.json({
+            message: 'Success',
+            data: result.rows
+        });
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+    }
+});
+
+app.get('/employees', async (req, res) => {
+    try {
+        const result = await viewAllEmployees();
+        res.json({
+            message: 'Success',
+            data: result.rows
+        });
+    } catch (error) {
+        console.error('Error fetching emplyees:', error);
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});
