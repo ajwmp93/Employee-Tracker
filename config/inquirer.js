@@ -137,8 +137,21 @@ const mainMenu = async () => {
                     choices: employeesList,
                 },
                 {
-                    
-                }
-            ])
+                   type: 'list',
+                   name: 'newRoleId',
+                   message: 'Select the new role for this employee:',
+                   choices: newRolesList, 
+                },
+            ]);
+            await updateEmployeeRole(employeeId, newRoleId);
+            console.log('Employee role updated successfully!');
+            break;
+
+        case 'Exit':
+            process.exit();
     }
+
+    mainMenu();
 }
+
+mainMenu();
